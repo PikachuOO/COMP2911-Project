@@ -7,6 +7,8 @@ public class Cell {
 	private User occupiedBy;
 	private int row;
 	private int column;
+	private boolean visited;
+	
 	public Cell(int row, int column){
 		this.row = row;
 		this.column = column;
@@ -15,6 +17,7 @@ public class Cell {
 		this.east = null;
 		this.west = null;
 		this.occupiedBy = null;
+		this.visited = false;
 	}
 	
 	public Cell getNorth(){
@@ -59,6 +62,14 @@ public class Cell {
 	
 	public int getColumn(){
 		return this.column;
+	}
+	
+	public boolean hasBeenVisited(){
+		return this.visited;
+	}
+	
+	public void setVisited(){
+		this.visited = true;
 	}
 
 }
