@@ -10,14 +10,7 @@ public interface Maze {
 	 */
 	public Cell getCell(int row, int column);
 	
-	/**
-	 * Add the given cell object into the specified position.
-	 * To be used to build the maze post-generation.
-	 * @param newCell The cell object to be added.
-	 * @param row The row the cell is to be added to.
-	 * @param column The column the cell is to be added to.
-	 */
-	public void addCell(Cell newCell, int row, int column);
+
 	
 	/**
 	 * Returns the cell where the user currently is.
@@ -45,6 +38,7 @@ public interface Maze {
 	 */
 	public boolean userFoundExit();
 	
+	public void generateMaze(int size);
 	
 	
 

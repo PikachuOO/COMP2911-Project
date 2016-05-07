@@ -9,9 +9,9 @@ public class TestMazeGen {
 	 * @param args
 	 */
 	public static void main(String[] args) {
+		//create a new square maze of size 10x10
 		MazeArray maze = new MazeArray(10);
-		MazeGenerator generator = new MazeGenerator(maze);
-		generator.generateMaze(0, 0);
+		//display it in ASCII
 		maze.printMaze();
 	}
 

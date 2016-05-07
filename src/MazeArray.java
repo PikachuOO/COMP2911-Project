@@ -1,11 +1,23 @@
 import java.util.ArrayList;
+import java.util.Random;
+import java.util.Stack;
 
 /**
  * Maze storages, holds all the cells and provides functions for maze generation
  * @author ruby
  *
  */
-public class MazeArray {
+
+/**
+ * Streamlined the code created by Ruby.
+ * Removed unnecessary MazeGenerator class
+ * Instead maze generation is done in the constructor of the MazeArray
+ * Also MazeArray becomes the concrete class that implements the Maze interface
+ * Still a lot of methods left to implement from the interface.
+ * @author Elliott
+ *
+ */
+public class MazeArray implements Maze{
 	private ArrayList<ArrayList<Cell>> cells;
 	private int size;
 	/**
@@ -23,7 +35,40 @@ public class MazeArray {
 			}
 			this.cells.add(temp);
 		}
+		this.generateMaze(this.size);
 	}
+
+	
+	public void generateMaze(int size){
+		Cell startingCell = this.getCell(0,0);
+		Stack<Cell> toDo = new Stack<Cell>();
+		Random randomizer = new Random();
+		toDo.push(startingCell);
+	
+		//While there are unvisited cells
+		while (!toDo.empty()){
+			Cell curCell = toDo.peek();
+			curCell.setVisited();
+			ArrayList<Cell> neighbours = this.getAllUnvisitedNeighbours(curCell);
+			 //1. If the current cell has any neighbours which have not been visited
+			
+			if (!neighbours.isEmpty()){
+				//  1. Choose randomly one of the unvisited neighbourse
+				Cell nextCell = neighbours.get(randomizer.nextInt(neighbours.size()));
+				toDo.push(nextCell);
+				this.carvePath(curCell, nextCell);
+			    //  2. Push the chosen cell to the stack
+			    //  3. Remove the wall between the current cell and the chosen cell 
+			}
+			// otherwise continue, pop off another cell from the stack and on wards
+			else{
+				toDo.pop();
+			}
+			
+		}
+		
+	}
+	
 	/**
 	 * Returns cell object at specific location
 	 * @param row row number of cell (0 index)
@@ -138,4 +183,43 @@ public class MazeArray {
 			System.out.println(botLine);
 		}
 	}
+
+
+
+	/**
+	 * Returns the first cell it finds which contains a user.
+	 * Thus assumes a single player game
+	 */
+	public Cell getUserCellLocation() {
+		for (int row=0; row<size; row++){
+			ArrayList<Cell> thisRow = this.cells.get(row);
+			for (int col=0; col<size; col++){
+				Cell thisCell = thisRow.get(col);
+				if (thisCell.getOccupyingUser()!=null){
+					return thisCell;
+				}
+			}
+		}
+		return null;
+	}
+
+
+	public void solveMaze() {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	public void getExitPathHint(int numStepsToReveal) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	public boolean userFoundExit() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+
 }
