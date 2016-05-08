@@ -10,8 +10,19 @@ public class TestMazeGen {
 	 */
 	public static void main(String[] args) {
 		//create a new square maze of size 10x10
-		MazeArray maze = new MazeArray(10);
-		//display it in ASCII
+		int size = 10;
+		MazeArray maze = new MazeArray(size);
+		maze.getCell(5, 5).setOccupyingUser(new User());
+		//set the exit cell of the maze to be top right
+		maze.setExitCell(maze.getCell(0, size-1));
+		maze.printMaze();
+		//use a Manhattan distance heuristic
+		Heuristic h = new ManhattanDistanceHeuristic(maze.getExitCell());
+		//test getting a hint
+		maze.getExitPathHint(h, 5);
+		maze.printMaze();
+		//test revealing the solution
+		maze.solveMaze(h);
 		maze.printMaze();
 	}
 

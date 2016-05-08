@@ -10,6 +10,11 @@ public interface Maze {
 	 */
 	public Cell getCell(int row, int column);
 	
+	/**
+	 * Gets the exit cell of the maze
+	 * @return A Cell object, the exit cell
+	 */
+	public Cell getExitCell();
 
 	
 	/**
@@ -22,13 +27,13 @@ public interface Maze {
 	/**
 	 * Use an A* algorithm to solve the maze completely
 	 */
-	public void solveMaze();
+	public void solveMaze(Heuristic h);
 	
 	/**
 	 * Use the same A* algorithm i.e. private method to solve the maze, but this time only reveal the first few steps (according to the level of difficulty)
 	 * @param numStepsToReveal The number of cells to reveal that are part of the path out of the maze.
 	 */
-	public void getExitPathHint(int numStepsToReveal);
+	public void getExitPathHint(Heuristic h, int numStepsToReveal);
 	
 	/**
 	 * Tests for the end game condition, when the user finds the exit of the maze.
@@ -38,6 +43,10 @@ public interface Maze {
 	 */
 	public boolean userFoundExit();
 	
+	/**
+	 * Creates the Maze (all mazes are square at the moment)
+	 * @param size The number of rows and columns of the Maze to be created
+	 */
 	public void generateMaze(int size);
 	
 	

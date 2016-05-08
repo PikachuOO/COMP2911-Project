@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 
 public class Cell {
 	private Cell north;
@@ -8,6 +9,7 @@ public class Cell {
 	private int row;
 	private int column;
 	private boolean visited;
+	private boolean onSolutionPath;
 	
 	public Cell(int row, int column){
 		this.row = row;
@@ -18,6 +20,7 @@ public class Cell {
 		this.west = null;
 		this.occupiedBy = null;
 		this.visited = false;
+		this.onSolutionPath = false;
 	}
 	
 	public Cell getNorth(){
@@ -57,8 +60,7 @@ public class Cell {
 	}
 	
 	public void setOccupyingUser(User user){
-		occupiedBy = user;
-		return;
+		this.occupiedBy = user;
 	}
 	
 	public int getRow(){
@@ -75,6 +77,36 @@ public class Cell {
 	
 	public void setVisited(){
 		this.visited = true;
+	}
+	
+	public void setOnSolutionPath(){
+		this.onSolutionPath = true;
+	}
+	
+	public boolean isOnSolutionPath(){
+		return this.onSolutionPath;
+	}
+	
+	public ArrayList<Cell> getNeighbours(){
+		ArrayList<Cell> neighbours = new ArrayList<Cell>();
+		if (this.north!=null){
+			neighbours.add(this.north);
+		}
+		if (this.south!=null){
+			neighbours.add(this.south);
+		}
+		if (this.east!=null){
+			neighbours.add(this.east);
+		}
+		if(this.west!=null){
+			neighbours.add(this.west);
+		}
+		return neighbours;
+	}
+	
+	public String toString(){
+		String s = "Cell ("+this.row+","+this.column+")";
+		return s;
 	}
 
 }

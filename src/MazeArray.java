@@ -1,4 +1,7 @@
 import java.util.ArrayList;
+import java.util.Hashtable;
+import java.util.ListIterator;
+import java.util.PriorityQueue;
 import java.util.Random;
 import java.util.Stack;
 
@@ -13,13 +16,16 @@ import java.util.Stack;
  * Removed unnecessary MazeGenerator class
  * Instead maze generation is done in the constructor of the MazeArray
  * Also MazeArray becomes the concrete class that implements the Maze interface
- * Still a lot of methods left to implement from the interface.
+ * Implemented the A* search for the exit 
+ * This can be used to reveal the whole path or a portion of it
+ * Also implemented testing if the user is at the exit, assuming top right as exit.
  * @author Elliott
  *
  */
 public class MazeArray implements Maze{
 	private ArrayList<ArrayList<Cell>> cells;
 	private int size;
+	private Cell exitCell;
 	/**
 	 * Generates empty maze grid based on size provided
 	 * cells are all disconnected
@@ -37,7 +43,14 @@ public class MazeArray implements Maze{
 		}
 		this.generateMaze(this.size);
 	}
-
+	
+	public void setExitCell(Cell exitCell){
+		this.exitCell = exitCell;
+	}
+	
+	public Cell getExitCell(){
+		return this.exitCell;
+	}
 	
 	public void generateMaze(int size){
 		Cell startingCell = this.getCell(0,0);
@@ -164,7 +177,16 @@ public class MazeArray implements Maze{
 			String botLine = "*";
 			//print each thingy
 			for (int col = 0; col < this.size; col++){
-				curLine += " ";
+				//print an x for the users location
+				if (getCell(row,col).getOccupyingUser()!=null){
+					curLine += "x";
+				//print an o if on the revealed solution path
+				} else if (getCell(row,col).isOnSolutionPath()){
+					curLine += "O";
+				} else {
+				//otherwise an empty cell
+					curLine += " ";
+				}
 				if (getCell(row, col).getEast() == null){
 					curLine += "*";
 				}
@@ -202,22 +224,87 @@ public class MazeArray implements Maze{
 		}
 		return null;
 	}
-
-
-	public void solveMaze() {
-		// TODO Auto-generated method stub
+	
+	/**
+	 * Private helper method
+	 * Does all the work of finding the path from the users location to the exit
+	 * Using an A* algorithm and the supplied heuristic (currently a Manhattan distance heuristic)
+	 * Returns a stack of the cells that make up the solution path
+	 * A stack is used so that when cells are popped off the path goes in the correct direction
+	 * i.e. From the user -> exit, as opposed to exit->user which is what would normally be produced by A*
+	 * @param h
+	 * @return
+	 */
+	private Stack<Cell> astar(Heuristic h){
+		Cell currentCell = this.getUserCellLocation();
+		State startingState = new State(currentCell,null,0,h);
+		PriorityQueue<State> statesToExpand = new PriorityQueue<State>();
+		Hashtable<Integer,Cell> visited = new Hashtable<Integer,Cell>();
+		statesToExpand.add(startingState);
+		while (true){
+			State currentState = statesToExpand.poll();
+			currentCell = currentState.getCurrentCell();
+			visited.put(currentCell.hashCode(),currentCell);
+			if (currentCell==this.exitCell){
+				Stack<Cell> pathToExit = new Stack<Cell>();
+				while (currentState!=null){
+					currentCell = currentState.getCurrentCell();
+					pathToExit.add(currentCell);
+					currentState = currentState.getPreviousState();
+				}
+				return pathToExit;
+			}
+			ArrayList<Cell> neighbours = currentCell.getNeighbours();
+			ListIterator<Cell> listIterator = neighbours.listIterator();
+			while (listIterator.hasNext()){
+				Cell thisCell = listIterator.next();
+				if (visited.get(thisCell.hashCode())==null){
+					State newState = new State(thisCell,currentState,currentState.getTotalCost()+1,h);
+					statesToExpand.add(newState);
+				}
+			}
+			
+		}
+	}
+	
+	/**
+	 * Reveals all the steps on the solution path from the users current location
+	 * To the exit of the maze
+	 */
+	public void solveMaze(Heuristic h) {
+		Stack<Cell> pathToExit = this.astar(h);
+		while (!pathToExit.empty()){
+			Cell thisCell = pathToExit.pop();
+			thisCell.setOnSolutionPath();
+		}
+		
 		
 	}
 
-
-	public void getExitPathHint(int numStepsToReveal) {
-		// TODO Auto-generated method stub
+	/**
+	 * Sets the first numStepsToRevealCells of the solution path (not including the cell the user is in)
+	 * As part of the solution path so that they can be revealed by the printMaze method
+	 * Or alternatively this information retrieved by the front end and displayed
+	 */
+	public void getExitPathHint(Heuristic h, int numStepsToReveal) {
+		Stack<Cell> pathToExit = this.astar(h);
+		int i = 0;
+		while (i<numStepsToReveal+1 && !pathToExit.empty()){
+			Cell thisCell = pathToExit.pop();
+			thisCell.setOnSolutionPath();
+			i+=1;
+		}
 		
 	}
 
-
+	/**
+	 * Returns true if the user is in this cell
+	 * False otherwise
+	 */
 	public boolean userFoundExit() {
-		// TODO Auto-generated method stub
+		if (this.getUserCellLocation()==this.exitCell){
+			return true;
+		}
 		return false;
 	}
 
