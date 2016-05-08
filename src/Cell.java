@@ -56,6 +56,11 @@ public class Cell {
 		return this.occupiedBy;
 	}
 	
+	public void setOccupyingUser(User user){
+		occupiedBy = user;
+		return;
+	}
+	
 	public int getRow(){
 		return this.row;
 	}
