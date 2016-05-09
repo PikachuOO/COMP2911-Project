@@ -42,6 +42,7 @@ public class MazeArray implements Maze{
 			this.cells.add(temp);
 		}
 		this.generateMaze(this.size);
+		exitCell = getCell(0,size-1);
 	}
 	
 	public void setExitCell(Cell exitCell){
