@@ -15,23 +15,26 @@ public class Board extends JPanel implements ActionListener {
 				  horizontalWall, 
 				  playerOneIcon,
 				  playerTwoIcon,
-				  finishImage;
+				  finishImage,
+				  coinImage;
 	
 	private ArrayList<User> players;
 	
-	public Board(int size, int cellSize){
+	public Board(int size, int cellSize, int numCoins){
 		this.size = size;
 		this.cellSize = cellSize;
 		maze = new MazeArray(size);
-		
+		maze.addCoins(numCoins);
 		//maze.printMaze();
 		
 		ImageIcon img = new ImageIcon("vertical_wall.png");
-		verticalWall = img.getImage();
+		verticalWall   = img.getImage();
 		img = new ImageIcon("horizontal_wall.png");
 		horizontalWall = img.getImage();
 		img = new ImageIcon("finish.png");
-		finishImage = img.getImage();
+		finishImage    = img.getImage();
+		img = new ImageIcon("coin.png");
+		coinImage	   = img.getImage();
 		
 		//Listen for key presses
 		addKeyListener(new ActionListener());
@@ -42,15 +45,15 @@ public class Board extends JPanel implements ActionListener {
 		
 		img = new ImageIcon("playerOne.png");
 		playerOneIcon = img.getImage();
-		User playerOne = new User(1, playerOneIcon,0,0);
+		User playerOne = new User(1, playerOneIcon,0,0, maze.getCell(0,0));
 		players.add(playerOne);
-		maze.getCell(playerOne.getPosY(), playerOne.getPosX()).setOccupyingUser(playerOne);
+		playerOne.getCell().setOccupyingUser(playerOne);
 		
 		img = new ImageIcon("playerTwo.png");
 		playerTwoIcon = img.getImage();
-		User playerTwo = new User(2, playerTwoIcon,size-1,size-1);
+		User playerTwo = new User(2, playerTwoIcon,size-1,size-1, maze.getCell(size-1,size-1));
 		players.add(playerTwo);
-		maze.getCell(playerTwo.getPosY(), playerTwo.getPosX()).setOccupyingUser(playerTwo);
+		playerTwo.getCell().setOccupyingUser(playerTwo);
 		
 		
 	}
@@ -101,6 +104,9 @@ public class Board extends JPanel implements ActionListener {
 						g.drawImage(playerTwoIcon, x*cellSize+5, y*cellSize+5, null);
 					}
 				}
+				if (cell.hasCoin()){
+					g.drawImage(coinImage, x*cellSize+5, y*cellSize+5, null);
+				}
 			}
 			
 		}
@@ -126,33 +132,47 @@ public class Board extends JPanel implements ActionListener {
 			if(keyCode == KeyEvent.VK_UP) {
 				if (firstPlayerCell.getNorth() != null){
 					firstPlayerCell.getNorth().setOccupyingUser(firstPlayer);
+					firstPlayer.setCell(firstPlayerCell.getNorth());
 					firstPlayerCell.setOccupyingUser(null);
+					
+					/*
 					firstPlayer.setPosY(firstPlayer.getPosY()-1);
-					firstPlayer.numMovesMade++;
+					firstPlayer.incNumMovesMade();
+					//firstPlayer.numMovesMade++;
+					*/
 				}
 			}
 			if(keyCode == KeyEvent.VK_DOWN) {
 				if (firstPlayerCell.getSouth() != null){
 					firstPlayerCell.getSouth().setOccupyingUser(firstPlayer);
+					firstPlayer.setCell(firstPlayerCell.getSouth());
 					firstPlayerCell.setOccupyingUser(null);
+					/*
 					firstPlayer.setPosY(firstPlayer.getPosY()+1);
-					firstPlayer.numMovesMade++;
+					firstPlayer.incNumMovesMade();
+					*/
 				}
 			}
 			if(keyCode == KeyEvent.VK_RIGHT) {
 				if (firstPlayerCell.getEast() != null){
 					firstPlayerCell.getEast().setOccupyingUser(firstPlayer);
+					firstPlayer.setCell(firstPlayerCell.getEast());
 					firstPlayerCell.setOccupyingUser(null);
+					/*
 					firstPlayer.setPosX(firstPlayer.getPosX()+1);
-					firstPlayer.numMovesMade++;
+					firstPlayer.incNumMovesMade();
+					*/
 				}
 			}
 			if(keyCode == KeyEvent.VK_LEFT) {
 				if (firstPlayerCell.getWest() != null){
 					firstPlayerCell.getWest().setOccupyingUser(firstPlayer);
+					firstPlayer.setCell(firstPlayerCell.getWest());
 					firstPlayerCell.setOccupyingUser(null);
+					/*
 					firstPlayer.setPosX(firstPlayer.getPosX()-1);
-					firstPlayer.numMovesMade++;
+					firstPlayer.incNumMovesMade();
+					*/
 				}
 			}
 			
@@ -160,33 +180,45 @@ public class Board extends JPanel implements ActionListener {
 			if(keyCode == KeyEvent.VK_W) {
 				if (secondPlayerCell.getNorth() != null){
 					secondPlayerCell.getNorth().setOccupyingUser(secondPlayer);
+					secondPlayer.setCell(secondPlayerCell.getNorth());
 					secondPlayerCell.setOccupyingUser(null);
+					/*
 					secondPlayer.setPosY(secondPlayer.getPosY()-1);
-					secondPlayer.numMovesMade++;
+					secondPlayer.incNumMovesMade();
+					*/
 				}
 			}
 			if(keyCode == KeyEvent.VK_S) {
 				if (secondPlayerCell.getSouth() != null){
 					secondPlayerCell.getSouth().setOccupyingUser(secondPlayer);
+					secondPlayer.setCell(secondPlayerCell.getSouth());
 					secondPlayerCell.setOccupyingUser(null);
+					/*
 					secondPlayer.setPosY(secondPlayer.getPosY()+1);
-					secondPlayer.numMovesMade++;
+					secondPlayer.incNumMovesMade();
+					*/
 				}
 			}
 			if(keyCode == KeyEvent.VK_D) {
 				if (secondPlayerCell.getEast() != null){
 					secondPlayerCell.getEast().setOccupyingUser(secondPlayer);
+					secondPlayer.setCell(secondPlayerCell.getEast());
 					secondPlayerCell.setOccupyingUser(null);
+					/*
 					secondPlayer.setPosX(secondPlayer.getPosX()+1);
-					secondPlayer.numMovesMade++;
+					secondPlayer.incNumMovesMade();
+					*/
 				}
 			}
 			if(keyCode == KeyEvent.VK_A) {
 				if (secondPlayerCell.getWest() != null){
 					secondPlayerCell.getWest().setOccupyingUser(secondPlayer);
+					secondPlayer.setCell(secondPlayerCell.getWest());
 					secondPlayerCell.setOccupyingUser(null);
+					/*
 					secondPlayer.setPosX(secondPlayer.getPosX()-1);
-					secondPlayer.numMovesMade++;
+					secondPlayer.incNumMovesMade();
+					*/
 				}
 			}
 		

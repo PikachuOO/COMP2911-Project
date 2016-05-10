@@ -10,6 +10,7 @@ public class Cell {
 	private int column;
 	private boolean visited;
 	private boolean onSolutionPath;
+	private boolean hasCoin;
 	
 	public Cell(int row, int column){
 		this.row = row;
@@ -107,6 +108,29 @@ public class Cell {
 	public String toString(){
 		String s = "Cell ("+this.row+","+this.column+")";
 		return s;
+	}
+	
+	/**
+	 * Sets the current cell to have a coin, even if it already has coin
+	 */
+	public void addCoin(){
+		this.hasCoin = true;
+	}
+	
+	/**
+	 * Attempts to remove coin from the current cell
+	 * @return True if there was a coin there and its successfully removed, false if there was no coin to start with
+	 */
+	public boolean removeCoin(){
+		if (this.hasCoin){
+			this.hasCoin = false;
+			return true;
+		}
+		return false;
+	}
+	
+	public boolean hasCoin(){
+		return this.hasCoin;
 	}
 
 }

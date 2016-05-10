@@ -15,6 +15,7 @@ public class TestMazeGen {
 		//maze.getCell(5, 5).setOccupyingUser(new User());
 		//set the exit cell of the maze to be top right
 		maze.setExitCell(maze.getCell(0, size-1));
+		maze.addCoins(5);
 		maze.printMaze();
 		//use a Manhattan distance heuristic
 		Heuristic h = new ManhattanDistanceHeuristic(maze.getExitCell());

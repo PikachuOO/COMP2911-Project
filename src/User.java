@@ -2,44 +2,61 @@ import java.awt.Image;
 
 public class User {
 
-	int ID;
+	private int ID;
 	Image icon;
-	int numMovesMade;
-	int currentScore;
-	int posX;
-	int posY;
+	private int numMovesMade;
+	private int currentScore;
+	private int posX;
+	private int posY;
+	private Cell curCell;
 	
-	public User(int ID, Image icon, int posX, int posY){
+	public User(int ID, Image icon, int posX, int posY, Cell startingCell){
 		this.ID = ID;
 		this.icon = icon;
-		numMovesMade = 0;
-		currentScore = 0;
+		this.numMovesMade = 0;
+		this.currentScore = 0;
 		this.posX = posX;
 		this.posY = posY;
+		this.curCell = startingCell;
+	}
+	
+	public Cell getCell(){
+		return this.curCell;
+	}
+	
+	//called every time user cell moves to new position
+	public void setCell(Cell cell){
+		this.curCell = cell;
+		this.posX = cell.getColumn();
+		this.posY = cell.getRow();
+		this.numMovesMade++;
+		
+		if (this.curCell.hasCoin()){
+			this.curCell.removeCoin();
+			this.addToCurrentScore(10); //magic number, fix later
+		}
 	}
 	
 	public int getID() {
-		return ID;
+		return this.ID;
 	}
 	
 	public int getNumMovesMade() {
-		return numMovesMade;
+		return this.numMovesMade;
 	}
 	
-	public void setNumMovesMade(int numMovesMade) {
-		this.numMovesMade = numMovesMade;
-	}
 	
 	public int getCurrentScore() {
-		return currentScore;
+		return this.currentScore;
 	}
+
 	
-	public void setCurrentScore(int currentScore) {
-		this.currentScore = currentScore;
+	public void addToCurrentScore(int score){
+		this.currentScore += score;
 	}
 	
 	public int getPosX() {
-		return posX;
+		return this.posX;
 	}
 	
 	public void setPosX(int posX) {
@@ -47,11 +64,13 @@ public class User {
 	}
 	
 	public int getPosY() {
-		return posY;
+		return this.posY;
 	}
 	
 	public void setPosY(int posY) {
 		this.posY = posY;
 	}
+	
+
 	
 }

@@ -7,7 +7,7 @@ public class Game {
 		f.setTitle("Maze Game");
 		int size = 20;
 		int cellSize = 30;
-		f.add(new Board(size, cellSize));
+		f.add(new Board(size, cellSize, 3));
 		f.setSize((size)*cellSize + 5, (size+1)*cellSize);
 		f.setLocationRelativeTo(null);
 		f.setVisible(true);

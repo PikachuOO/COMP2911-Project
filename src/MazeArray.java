@@ -67,7 +67,7 @@ public class MazeArray implements Maze{
 			 //1. If the current cell has any neighbours which have not been visited
 			
 			if (!neighbours.isEmpty()){
-				//  1. Choose randomly one of the unvisited neighbourse
+				//  1. Choose randomly one of the unvisited neighbours
 				Cell nextCell = neighbours.get(randomizer.nextInt(neighbours.size()));
 				toDo.push(nextCell);
 				this.carvePath(curCell, nextCell);
@@ -97,7 +97,7 @@ public class MazeArray implements Maze{
 	}
 	
 	/**
-	 * Gets all nighbours of cell that has not been visited by maze gen algorithm
+	 * Gets all neighbours of cell that has not been visited by maze gen algorithm
 	 * @param cell
 	 * @return
 	 */
@@ -182,7 +182,11 @@ public class MazeArray implements Maze{
 				if (getCell(row,col).getOccupyingUser()!=null){
 					curLine += "x";
 				//print an o if on the revealed solution path
-				} else if (getCell(row,col).isOnSolutionPath()){
+				} 
+				else if (getCell(row,col).hasCoin()){
+					curLine += "@";
+				}
+				else if (getCell(row,col).isOnSolutionPath()){
 					curLine += "O";
 				} else {
 				//otherwise an empty cell
@@ -307,6 +311,24 @@ public class MazeArray implements Maze{
 			return true;
 		}
 		return false;
+	}
+	
+	/**
+	 * Adds a number of coins randomly around the maze
+	 * @param coinNum number of coins to be added
+	 */
+	public void addCoins(int coinNum){
+		Random rng = new Random();
+		for (int i = 0; i < coinNum; i++){
+			int row = rng.nextInt(this.size-1);
+			int col = rng.nextInt(this.size-1);
+			while (this.getCell(row,col).hasCoin()){
+				row = rng.nextInt(this.size-1);
+				col = rng.nextInt(this.size-1);
+			}
+			this.getCell(row,col).addCoin();
+		}
+		
 	}
 
 
