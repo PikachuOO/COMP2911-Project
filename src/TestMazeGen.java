@@ -18,7 +18,7 @@ public class TestMazeGen {
 		MazeArray maze = new MazeArray(size);
 		//maze.getCell(5, 5).setOccupyingUser(new User());
 		//set the exit cell of the maze to be top right
-		maze.setExitCell(maze.getCell(0, size-1));
+		//maze.setExitCell(maze.getCell(0, size-1));
 		maze.addCoins(5);
 		ImageIcon img = new ImageIcon("playerOne.png");
 		Image playerOneIcon = img.getImage();
@@ -26,7 +26,7 @@ public class TestMazeGen {
 		maze.getCell(playerOne.getPosY(), playerOne.getPosX()).setOccupyingUser(playerOne);
 		maze.printMaze();
 		//use a Manhattan distance heuristic
-		Heuristic h = new ManhattanDistanceHeuristic(maze.getExitCell());
+		Heuristic h = new ManhattanDistanceHeuristic(maze.getSiteA());
 		//test getting a hint
 		maze.getExitPathHint(h, 5);
 		maze.printMaze();

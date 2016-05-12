@@ -16,7 +16,9 @@ public class Board extends JPanel implements ActionListener {
 				  playerOneIcon,
 				  playerTwoIcon,
 				  finishImage,
-				  coinImage;
+				  coinImage,
+				  siteAImage,
+				  siteBImage;
 	
 	private ArrayList<User> players;
 	
@@ -35,6 +37,10 @@ public class Board extends JPanel implements ActionListener {
 		finishImage    = img.getImage();
 		img = new ImageIcon("coin.png");
 		coinImage	   = img.getImage();
+		img = new ImageIcon("site_A.png");
+		siteAImage	   = img.getImage();
+		img = new ImageIcon("site_B.png");
+		siteBImage 	   = img.getImage();
 		
 		//Listen for key presses
 		addKeyListener(new ActionListener());
@@ -49,11 +55,13 @@ public class Board extends JPanel implements ActionListener {
 		players.add(playerOne);
 		playerOne.getCell().setOccupyingUser(playerOne);
 		
+		/*
 		img = new ImageIcon("playerTwo.png");
 		playerTwoIcon = img.getImage();
 		User playerTwo = new User(2, playerTwoIcon,size-1,size-1, maze.getCell(size-1,size-1));
 		players.add(playerTwo);
 		playerTwo.getCell().setOccupyingUser(playerTwo);
+		*/
 		
 		
 	}
@@ -83,6 +91,16 @@ public class Board extends JPanel implements ActionListener {
 			
 			for (int x = 0; x < size; x++){
 				cell = maze.getCell(y, x);
+				g.setColor(new Color(0,0,0));
+				if (cell.equals(maze.getSiteA())){
+					g.drawImage(siteAImage, x*cellSize+5, y*cellSize+5, null);
+				}
+				else if (cell.equals(maze.getSiteB())){
+					g.drawImage(siteBImage, x*cellSize+5, y*cellSize+5, null);
+				}
+				else if (cell.hasBeenExplored()== false){
+					g.fillRect(x*cellSize+5, y*cellSize+5, cellSize, cellSize);
+				}
 				
 				//g.setColor(Color.BLACK);
 				//if there is a wall to the right. paint it in
@@ -100,9 +118,11 @@ public class Board extends JPanel implements ActionListener {
 					if(cell.getOccupyingUser().equals(players.get(0))) {
 						g.drawImage(playerOneIcon, x*cellSize+5, y*cellSize+5, null);
 					}
+					/*
 					if(cell.getOccupyingUser().equals(players.get(1))) {
 						g.drawImage(playerTwoIcon, x*cellSize+5, y*cellSize+5, null);
 					}
+					*/
 				}
 				if (cell.hasCoin()){
 					g.drawImage(coinImage, x*cellSize+5, y*cellSize+5, null);
@@ -110,10 +130,6 @@ public class Board extends JPanel implements ActionListener {
 			}
 			
 		}
-		
-		cell = maze.getExitCell();
-		//System.out.println(cell.getRow() + ", " + cell.getColumn());
-		g.drawImage(finishImage, cell.getColumn()*cellSize+5, cell.getRow()*cellSize+5, null);
 		
 	}
 
@@ -124,9 +140,9 @@ public class Board extends JPanel implements ActionListener {
 			
 			User firstPlayer = players.get(0);
 			Cell firstPlayerCell = maze.getCell(firstPlayer.getPosY(), firstPlayer.getPosX());
-			
-			User secondPlayer = players.get(1);
-			Cell secondPlayerCell = maze.getCell(secondPlayer.getPosY(), secondPlayer.getPosX());
+			maze.exploreNearbyCells(firstPlayerCell);
+			//User secondPlayer = players.get(1);
+			//Cell secondPlayerCell = maze.getCell(secondPlayer.getPosY(), secondPlayer.getPosX());
 			
 			//Player One Keys
 			if(keyCode == KeyEvent.VK_UP) {
@@ -175,17 +191,14 @@ public class Board extends JPanel implements ActionListener {
 					*/
 				}
 			}
-			
+			/*
 			//Player Two Keys
 			if(keyCode == KeyEvent.VK_W) {
 				if (secondPlayerCell.getNorth() != null){
 					secondPlayerCell.getNorth().setOccupyingUser(secondPlayer);
 					secondPlayer.setCell(secondPlayerCell.getNorth());
 					secondPlayerCell.setOccupyingUser(null);
-					/*
-					secondPlayer.setPosY(secondPlayer.getPosY()-1);
-					secondPlayer.incNumMovesMade();
-					*/
+
 				}
 			}
 			if(keyCode == KeyEvent.VK_S) {
@@ -193,10 +206,7 @@ public class Board extends JPanel implements ActionListener {
 					secondPlayerCell.getSouth().setOccupyingUser(secondPlayer);
 					secondPlayer.setCell(secondPlayerCell.getSouth());
 					secondPlayerCell.setOccupyingUser(null);
-					/*
-					secondPlayer.setPosY(secondPlayer.getPosY()+1);
-					secondPlayer.incNumMovesMade();
-					*/
+
 				}
 			}
 			if(keyCode == KeyEvent.VK_D) {
@@ -204,10 +214,7 @@ public class Board extends JPanel implements ActionListener {
 					secondPlayerCell.getEast().setOccupyingUser(secondPlayer);
 					secondPlayer.setCell(secondPlayerCell.getEast());
 					secondPlayerCell.setOccupyingUser(null);
-					/*
-					secondPlayer.setPosX(secondPlayer.getPosX()+1);
-					secondPlayer.incNumMovesMade();
-					*/
+
 				}
 			}
 			if(keyCode == KeyEvent.VK_A) {
@@ -215,13 +222,10 @@ public class Board extends JPanel implements ActionListener {
 					secondPlayerCell.getWest().setOccupyingUser(secondPlayer);
 					secondPlayer.setCell(secondPlayerCell.getWest());
 					secondPlayerCell.setOccupyingUser(null);
-					/*
-					secondPlayer.setPosX(secondPlayer.getPosX()-1);
-					secondPlayer.incNumMovesMade();
-					*/
+
 				}
 			}
-		
+			*/
 			repaint();
 			
 		}

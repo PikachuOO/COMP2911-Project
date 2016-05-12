@@ -11,6 +11,7 @@ public class Cell {
 	private boolean visited;
 	private boolean onSolutionPath;
 	private boolean hasCoin;
+	private boolean explored;
 	
 	public Cell(int row, int column){
 		this.row = row;
@@ -22,6 +23,7 @@ public class Cell {
 		this.occupiedBy = null;
 		this.visited = false;
 		this.onSolutionPath = false;
+		this.explored = false;
 	}
 	
 	public Cell getNorth(){
@@ -38,6 +40,14 @@ public class Cell {
 	
 	public Cell getWest(){
 		return this.west;
+	}
+	
+	public boolean hasBeenExplored(){
+		return this.explored;
+	}
+	
+	public void setExplored(){
+		this.explored = true;
 	}
 	
 	public void setNorth(Cell n){

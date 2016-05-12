@@ -25,7 +25,8 @@ import java.util.Stack;
 public class MazeArray implements Maze{
 	private ArrayList<ArrayList<Cell>> cells;
 	private int size;
-	private Cell exitCell;
+	private Cell siteA;
+	private Cell siteB;
 	/**
 	 * Generates empty maze grid based on size provided
 	 * cells are all disconnected
@@ -42,17 +43,24 @@ public class MazeArray implements Maze{
 			this.cells.add(temp);
 		}
 		this.generateMaze(this.size);
-		exitCell = getCell(0,size-1);
+		siteA = getCell(0, size-1);
+		siteB = getCell(size-1, 0);
 	}
 	
-	public void setExitCell(Cell exitCell){
-		this.exitCell = exitCell;
+	public void setACell(Cell ACell){
+		this.siteA = ACell;
 	}
 	
-	public Cell getExitCell(){
-		return this.exitCell;
+	public void setBCell(Cell BCell){
+		this.siteB = BCell;
+	}
+	public Cell getSiteA(){
+		return this.siteA;
 	}
 	
+	public Cell getSiteB(){
+		return this.siteB;
+	}
 	public void generateMaze(int size){
 		Cell startingCell = this.getCell(0,0);
 		Stack<Cell> toDo = new Stack<Cell>();
@@ -167,6 +175,7 @@ public class MazeArray implements Maze{
 	
 	public void printMaze(){
 		//print the top wall
+		Cell curCell;
 		for (int i = 0; i < this.size; i++){
 			System.out.print("**");
 		}
@@ -179,14 +188,23 @@ public class MazeArray implements Maze{
 			//print each thingy
 			for (int col = 0; col < this.size; col++){
 				//print an x for the users location
-				if (getCell(row,col).getOccupyingUser()!=null){
+				curCell = getCell(row,col);
+				if (curCell.getOccupyingUser()!=null){
 					curLine += "x";
 				//print an o if on the revealed solution path
 				} 
-				else if (getCell(row,col).hasCoin()){
+				else if (curCell.hasCoin()){
 					curLine += "@";
 				}
-				else if (getCell(row,col).isOnSolutionPath()){
+				/*
+				else if (curCell.equals(maze.getSiteA())){
+					curLine += "A";
+				}
+				else if (curCell.equals(maze.getSiteB())){
+					curLine += "B";
+				}
+				*/
+				else if (curCell.isOnSolutionPath()){
 					curLine += "O";
 				} else {
 				//otherwise an empty cell
@@ -250,7 +268,7 @@ public class MazeArray implements Maze{
 			State currentState = statesToExpand.poll();
 			currentCell = currentState.getCurrentCell();
 			visited.put(currentCell.hashCode(),currentCell);
-			if (currentCell==this.exitCell){
+			if (currentCell==this.siteA){
 				Stack<Cell> pathToExit = new Stack<Cell>();
 				while (currentState!=null){
 					currentCell = currentState.getCurrentCell();
@@ -303,11 +321,11 @@ public class MazeArray implements Maze{
 	}
 
 	/**
-	 * Returns true if the user is in this cell
+	 * Returns true if the user is in siteA
 	 * False otherwise
 	 */
-	public boolean userFoundExit() {
-		if (this.getUserCellLocation()==this.exitCell){
+	public boolean userAtA() {
+		if (this.getUserCellLocation()==this.siteA){
 			return true;
 		}
 		return false;
@@ -320,15 +338,27 @@ public class MazeArray implements Maze{
 	public void addCoins(int coinNum){
 		Random rng = new Random();
 		for (int i = 0; i < coinNum; i++){
-			int row = rng.nextInt(this.size-1);
-			int col = rng.nextInt(this.size-1);
+			int row = rng.nextInt(size-1);
+			int col = rng.nextInt(size-1);
 			while (this.getCell(row,col).hasCoin()){
-				row = rng.nextInt(this.size-1);
-				col = rng.nextInt(this.size-1);
+				row = rng.nextInt(size-1);
+				col = rng.nextInt(size-1);
 			}
 			this.getCell(row,col).addCoin();
 		}
 		
+	}
+	
+	public void exploreNearbyCells(Cell cell){
+		int rowNum = cell.getRow();
+		int colNum = cell.getColumn();
+		for (int row = rowNum-2; row <= rowNum+2; row++){
+			for (int col = colNum-2; col <= colNum+2; col++){
+				if (getCell(row, col)!=null && getCell(row, col).hasBeenExplored()==false){
+					getCell(row,col).setExplored();
+				}
+			}
+		}
 	}
 
 

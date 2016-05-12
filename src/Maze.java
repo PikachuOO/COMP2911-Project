@@ -10,11 +10,6 @@ public interface Maze {
 	 */
 	public Cell getCell(int row, int column);
 	
-	/**
-	 * Gets the exit cell of the maze
-	 * @return A Cell object, the exit cell
-	 */
-	public Cell getExitCell();
 
 	
 	/**
@@ -34,14 +29,7 @@ public interface Maze {
 	 * @param numStepsToReveal The number of cells to reveal that are part of the path out of the maze.
 	 */
 	public void getExitPathHint(Heuristic h, int numStepsToReveal);
-	
-	/**
-	 * Tests for the end game condition, when the user finds the exit of the maze.
-	 * (Not exactly sure how this will work, just being in the cell where the exit is probably isn't enough,
-	 * they probably need then to press the arrow key towards the exit, that is the gap in the perimeter wall)
-	 * @return True if the user has found the exit, false otherwise.
-	 */
-	public boolean userFoundExit();
+
 	
 	/**
 	 * Creates the Maze (all mazes are square at the moment)
