@@ -90,6 +90,10 @@ public class Cell {
 		this.visited = true;
 	}
 	
+	public void setNotOnSolutionPath(){
+		this.onSolutionPath = false;
+	}
+	
 	public void setOnSolutionPath(){
 		this.onSolutionPath = true;
 	}

@@ -22,6 +22,7 @@ public class Board extends JPanel implements ActionListener {
 	
 	private ArrayList<User> players;
 	
+	
 	public Board(int size, int cellSize, int numCoins){
 		this.size = size;
 		this.cellSize = cellSize;
@@ -91,14 +92,19 @@ public class Board extends JPanel implements ActionListener {
 			
 			for (int x = 0; x < size; x++){
 				cell = maze.getCell(y, x);
-				g.setColor(new Color(0,0,0));
+
 				if (cell.equals(maze.getSiteA())){
 					g.drawImage(siteAImage, x*cellSize+5, y*cellSize+5, null);
 				}
 				else if (cell.equals(maze.getSiteB())){
 					g.drawImage(siteBImage, x*cellSize+5, y*cellSize+5, null);
 				}
+				else if (cell.isOnSolutionPath()){
+					g.setColor(new Color(255,255,0));
+					g.fillRect(x*cellSize+5, y*cellSize+5, cellSize, cellSize);
+				}
 				else if (cell.hasBeenExplored()== false){
+					g.setColor(new Color(0,0,0));
 					g.fillRect(x*cellSize+5, y*cellSize+5, cellSize, cellSize);
 				}
 				
@@ -137,12 +143,22 @@ public class Board extends JPanel implements ActionListener {
 		
 		public void keyPressed (KeyEvent e) {
 			int keyCode = e.getKeyCode();
-			
+			Heuristic h = new ManhattanDistanceHeuristic(maze.getSiteA());
 			User firstPlayer = players.get(0);
 			Cell firstPlayerCell = maze.getCell(firstPlayer.getPosY(), firstPlayer.getPosX());
 			maze.exploreNearbyCells(firstPlayerCell);
 			//User secondPlayer = players.get(1);
 			//Cell secondPlayerCell = maze.getCell(secondPlayer.getPosY(), secondPlayer.getPosX());
+			
+			if (keyCode == KeyEvent.VK_S){
+				//display the entire solution path to site A
+				maze.solveMaze(h);
+			}
+			
+			if (keyCode == KeyEvent.VK_H){
+				//display the first 5 steps to site A
+				maze.getExitPathHint(h, 5);
+			}
 			
 			//Player One Keys
 			if(keyCode == KeyEvent.VK_UP) {
@@ -191,6 +207,10 @@ public class Board extends JPanel implements ActionListener {
 					*/
 				}
 			}
+			
+			//undo yellow highlighting as player traverses solution path
+			firstPlayerCell = maze.getCell(firstPlayer.getPosY(), firstPlayer.getPosX());
+			firstPlayerCell.setNotOnSolutionPath();
 			/*
 			//Player Two Keys
 			if(keyCode == KeyEvent.VK_W) {

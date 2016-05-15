@@ -250,13 +250,13 @@ public class MazeArray implements Maze{
 	
 	/**
 	 * Private helper method
-	 * Does all the work of finding the path from the users location to the exit
+	 * Does all the work of finding the path from the users location to the site where the bomb is (default site A)
 	 * Using an A* algorithm and the supplied heuristic (currently a Manhattan distance heuristic)
 	 * Returns a stack of the cells that make up the solution path
 	 * A stack is used so that when cells are popped off the path goes in the correct direction
-	 * i.e. From the user -> exit, as opposed to exit->user which is what would normally be produced by A*
+	 * i.e. From the user -> site A, as opposed to site A->user which is what would normally be produced by A*
 	 * @param h
-	 * @return
+	 * @return A stack of Cells representing the path from the user to site A
 	 */
 	private Stack<Cell> astar(Heuristic h){
 		Cell currentCell = this.getUserCellLocation();
